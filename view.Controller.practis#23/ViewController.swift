@@ -45,13 +45,15 @@ class ViewController: UIViewController {
 
         let layout = UICollectionViewFlowLayout()
 
-        layout.itemSize = CGSize(
-            width: 160,
-            height: 220
-        )
-
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 16
+        
+        layout.sectionInset = UIEdgeInsets(
+            top: 16,
+            left: 16,
+            bottom: 16,
+            right: 16
+        )
 
         let collectionView = UICollectionView(
             frame: .zero,
@@ -78,6 +80,7 @@ class ViewController: UIViewController {
         )
 
         collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     func setupConstraints() {
@@ -107,4 +110,41 @@ extension ViewController: UICollectionViewDataSource {
     }
     
 
+}
+
+extension ViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+
+        let horizontalInset: CGFloat = 16
+        let spacing: CGFloat = 10
+
+        let availableWidth = collectionView.bounds.width
+            - horizontalInset * 2
+            - spacing
+
+        let cellWidth = availableWidth / 2
+
+        return CGSize(
+            width: cellWidth,
+            height: 220
+        )
+    }
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        let selectedMovie = movies[indexPath.item]
+        let detailsViewController = MovieDetailsViewController(
+            movie: selectedMovie
+        )
+        navigationController?.pushViewController(
+            detailsViewController,
+            animated: true
+        )
+            print(selectedMovie.name)
+    }
 }
